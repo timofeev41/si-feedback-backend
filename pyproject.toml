@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "si-feedback-backend"
+version = "0.1.0"
+description = ""
+authors = ["n.timofeev <nikolai.timofeev@decartel.co>"]
+readme = "README.md"
+packages = [{include = "si_feedback_backend"}]
+
+[tool.poetry.dependencies]
+python = "^3.13"
+fastapi = "^0.115.5"
+sqlalchemy = "^2.0.36"
+alembic = "^1.14.0"
+psycopg2-binary = "^2.9.10"
+loguru = "^0.7.2"
+python-dotenv = "^1.0.1"
+pydantic-settings = "^2.6.1"
+pyjwt = "^2.10.0"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+uvicorn = "^0.32.1"
+python-multipart = "^0.0.17"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
