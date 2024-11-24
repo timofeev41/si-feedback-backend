@@ -13,17 +13,32 @@ services:
         volumes:
             - postgres:/var/lib/postgresql/data
 
+#    deportator:
+#        build:
+#          context: Dockerfile
+#        container_name: deportator_si_migrate
+#        depends_on: [ postgres ]
+#        restart: on-failure
+#        working_dir: /app/src
+#        environment:
+#            - PYTHONPATH=..
+#        entrypoint: ['alembic', 'upgrade', 'head']
+
     feedback:
-        image: feedback
+        build:
+            context: .
+            dockerfile: Dockerfile
         ports:
             - "8000:8000"
         environment:
-            - POSTGRES_DSN=postgres://postgres:postgres@postgres:5432/feedback
+            - POSTGRES_DSN=postgresql+psycopg2://postgres:postgres@postgres:5432/feedback
             - SECRET_KEY=SOMEKEY
             - ALGORITHM=HS256
             - ACCESS_TOKEN_EXPIRE_MINUTES=9999
         depends_on:
             - postgres
+#            - deportator
+        entrypoint: ["uvicorn", "src.app:app", "--host", "0.0.0.0"]
 
 volumes:
     postgres: {}
