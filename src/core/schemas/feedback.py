@@ -18,6 +18,7 @@ class FeedbackSessionSchema(BaseSchema):
     ts_deactivated: datetime | None
     responses: list[FeedbackResponsesSchema]
     title: str | None
+    gpt_summary: str = 'Super good performance! There will be some text from GPT-4o mini model!!! yay so cool'
 
 
 class TotalFeedbackSummarySchema(BaseSchema):
