@@ -1,9 +1,10 @@
 from datetime import datetime
+import uuid
 
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, HTTPException
 
 from src.core.dependencies.auth import CurrentUser, AdminUser
-from src.core.dependencies.feedback import FetchSession
+from src.core.dependencies.feedback import FetchSession, get_feedback_session
 from src.core.handlers.feedback import handle_already_sent_feedback
 from src.core.models.feedback_session import FeedbackResponse
 from src.core.models.session import StartedSession
@@ -47,14 +48,17 @@ mock_feedback_form = [
 
 
 @router.post("/{session_id}")
-async def submit_feedback(fb_session: FetchSession, user: CurrentUser, data: dict = Body(..., embed=True)):
-    with handle_already_sent_feedback():
+async def submit_feedback(session_id: uuid.UUID, user: CurrentUser, data: dict = Body(..., embed=True)):
+    session = await get_feedback_session(session_id)
+    try:
         return FeedbackResponse.insert(
-            session_id=fb_session.id,
+            session_id=session.id,
             author=user,
             data=data,
             ts_created=datetime.now(),
         )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=e.args[0])
 
 
 @router.get("/{session_id}", response_model=FeedbackFormSchema)

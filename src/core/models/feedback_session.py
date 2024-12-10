@@ -49,8 +49,8 @@ class FeedbackResponse(BaseModel):
     @classmethod
     def insert(cls, **kwargs) -> Self:
         if cls.one(
-            cls.author_id == kwargs.pop("author").id,
-            cls.session_id == kwargs.pop("session_id"),
+            cls.author_id == kwargs.get("author").id,
+            cls.session_id == kwargs.get("session_id"),
         ):
             raise ValueError("User already sent his feedback on this form.")
         return super().insert(**kwargs)
