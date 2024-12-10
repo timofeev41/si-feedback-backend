@@ -1,8 +1,9 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-from src.core.models.session import SyncSession
+
 from src.routers import auth, feedback_session, users, feedback
 
 
@@ -10,7 +11,15 @@ from src.routers import auth, feedback_session, users, feedback
 # async def lifespan(fastapi_app: FastAPI):
 #     """XXX: Nothing there now..."""
 
-app = FastAPI()
+app = FastAPI(title='Smart Industry Feedback Service API', version='0.0.1sigma-patrick-bateman')
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(auth.router)
 app.include_router(feedback_session.router)
