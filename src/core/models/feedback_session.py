@@ -9,6 +9,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 
 from .base import BaseModel
 from .user import User
+from ...tasks.summary import summarize_feedback, summarize_session
 
 
 class FeedbackSession(BaseModel):
@@ -17,6 +18,7 @@ class FeedbackSession(BaseModel):
     title: Mapped[str] = mapped_column(nullable=False)
     is_active: Mapped[bool] = mapped_column(nullable=False, default=True)
     ts_deactivated: Mapped[datetime] = mapped_column(nullable=True)
+    summarized: Mapped[str] = mapped_column(nullable=True)
 
     author: Mapped["User"] = relationship(back_populates="feedback_sessions")
     responses: Mapped[typing.List["FeedbackResponse"]] = relationship(back_populates="feedback_session")
@@ -25,6 +27,8 @@ class FeedbackSession(BaseModel):
         if user_id == self.author_id and self.is_active:
             self.is_active = False
             self.ts_deactivated = datetime.now()
+            summaries = [r.summarized for r in self.responses]
+            self.summarized = summarize_session(summaries, self.id)
             self.save()
             return
         raise ValueError("Wrong user or session already ended")
@@ -42,6 +46,7 @@ class FeedbackResponse(BaseModel):
     # json field with feedback
     data: Mapped[dict] = mapped_column(JSONB, nullable=False, default="{}")
     ts_created: Mapped[datetime] = mapped_column(nullable=False, default=datetime.now)
+    summarized: Mapped[str] = mapped_column(nullable=True)
 
     author: Mapped["User"] = relationship()
     feedback_session: Mapped["FeedbackSession"] = relationship()
@@ -53,4 +58,7 @@ class FeedbackResponse(BaseModel):
             cls.session_id == kwargs.get("session_id"),
         ):
             raise ValueError("User already sent his feedback on this form.")
-        return super().insert(**kwargs)
+        return super().insert(
+            summarized=summarize_feedback(kwargs.get('data'), kwargs.get('session_id')),
+            **kwargs,
+        )

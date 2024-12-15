@@ -21,8 +21,9 @@ async def get_feedback_sessions(user_id: int, current_user: CurrentUser):
     return FeedbackSession.select(FeedbackSession.author_id == user_id)
 
 
-@router.get("/total-summary/{user_id}", response_model=TotalFeedbackSummarySchema)
+@router.get("/total-summary/{user_id}", response_model=TotalFeedbackSummarySchema, deprecated=True)
 async def get_total_summary(user_id: int, current_user: CurrentUser):
+    """Deprecated because all summary details moved to session and response."""
     return TotalFeedbackSummarySchema(total=get_total_feedback_summary(user_id))
 
 

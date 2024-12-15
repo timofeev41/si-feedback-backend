@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 
-from src.routers import auth, feedback_session, users, feedback
+from src.routers import auth, feedback_session, users, feedback, ai_assist
 
 
 # @asynccontextmanager
@@ -25,3 +25,4 @@ app.include_router(auth.router)
 app.include_router(feedback_session.router)
 app.include_router(users.router)
 app.include_router(feedback.router)
+app.include_router(ai_assist.router)
