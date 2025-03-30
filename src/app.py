@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -11,6 +12,7 @@ from src.routers import auth, feedback_session, users, feedback, ai_assist
 # async def lifespan(fastapi_app: FastAPI):
 #     """XXX: Nothing there now..."""
 
+load_dotenv()
 app = FastAPI(title='Smart Industry Feedback Service API', version='0.0.1sigma-patrick-bateman')
 
 app.add_middleware(
