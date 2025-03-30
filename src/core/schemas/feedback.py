@@ -28,3 +28,7 @@ class TotalFeedbackSummarySchema(BaseSchema):
 class FeedbackFormSchema(BaseSchema):
     fields: list[dict]
     header: str
+
+class PerformanceAnalyticsSchema(BaseSchema):
+    fields: list[dict]
+    summarized: str

@@ -24,3 +24,6 @@ Go to src dir and run:
 $ PYTHONPATH=.. alembic revision --autogenerate -m "some migration name"
 $ PYTHONPATH=.. alembic upgrade head 
 ```
+
+## Create users in DB
+make call to `/register` or create users in psql
